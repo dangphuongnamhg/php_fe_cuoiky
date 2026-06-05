@@ -1,0 +1,342 @@
+/* ================================================================
+   FieldBook — Custom CSS (Bootstrap 5 supplement)
+   Primary: #1F4E79 | Secondary: #2E75B6
+   ================================================================ */
+
+:root {
+    --fb-primary: #1F4E79;
+    --fb-secondary: #2E75B6;
+    --fb-success: #16a34a;
+    --fb-warning: #f59e0b;
+    --fb-danger: #dc2626;
+    --fb-info: #0ea5e9;
+    --fb-muted: #6b7280;
+    --fb-bg-light: #F8F9FF;
+    --fb-radius: 1rem;
+}
+
+/* ── Global ─────────────────────────────────────────────────────── */
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: #1e293b;
+    background: #f8fafc;
+}
+
+/* ── card-fb ────────────────────────────────────────────────────── */
+.card-fb {
+    background: #fff;
+    border-radius: 1.25rem; /* Bo góc mềm mại hơn */
+    border: 1px solid rgba(0, 0, 0, .05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .03);
+    transition: box-shadow .3s ease, transform .3s ease;
+    overflow: hidden;
+}
+.card-fb:hover {
+    box-shadow: 0 12px 32px rgba(31, 78, 121, .1);
+    transform: translateY(-4px);
+}
+
+/* ── Hero Section ───────────────────────────────────────────────── */
+.hero-section {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--fb-primary), var(--fb-secondary), var(--fb-primary));
+}
+.hero-section .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: .2;
+}
+
+/* ── Time Slot Grid ─────────────────────────────────────────────── */
+.slot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+}
+.slot-cell {
+    padding: 12px 4px; /* Tăng padding để dễ bấm trên mobile */
+    border-radius: 10px;
+    text-align: center;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all .2s ease;
+    user-select: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.slot-cell:hover:not(.slot-booked):not(.slot-locked) {
+    transform: scale(1.05);
+}
+
+/* Slot states */
+.slot-available {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-color: #c8e6c9;
+}
+.slot-available:hover {
+    background: #c8e6c9;
+    border-color: #81c784;
+}
+.slot-premium {
+    background: #fff3e0;
+    color: #e65100;
+    border-color: #ffe0b2;
+}
+.slot-premium:hover {
+    background: #ffe0b2;
+    border-color: #ffb74d;
+}
+.slot-weekend {
+    background: #f3e8ff; /* Tím nhạt */
+    color: #6b21a8;
+    border-color: #e9d5ff;
+}
+.slot-weekend:hover {
+    background: #e9d5ff;
+    border-color: #d8b4fe;
+}
+.slot-booked {
+    background: #ffebee;
+    color: #c62828;
+    border-color: #ffcdd2;
+    cursor: not-allowed;
+    opacity: .65;
+}
+.slot-locked {
+    background: #f5f5f5;
+    color: #bdbdbd;
+    border-color: #e0e0e0;
+    cursor: not-allowed;
+}
+.slot-selected {
+    background: var(--fb-primary) !important;
+    color: #fff !important;
+    border-color: var(--fb-secondary) !important;
+    box-shadow: 0 0 0 3px rgba(46, 117, 182, .3);
+}
+
+/* ── Step Circle ────────────────────────────────────────────────── */
+.step-circle {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--fb-primary);
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(31, 78, 121, .3);
+    position: relative;
+    z-index: 2;
+}
+.step-icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 1rem;
+    background: #fff;
+    color: var(--fb-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+}
+
+/* ── Review Card ────────────────────────────────────────────────── */
+.review-card {
+    position: relative;
+}
+.review-card .quote-mark {
+    position: absolute;
+    right: 20px;
+    top: 8px;
+    font-size: 4rem;
+    line-height: 1;
+    color: rgba(31, 78, 121, .12);
+    font-family: serif;
+}
+
+/* ── Mode Toggle ────────────────────────────────────────────────── */
+.mode-toggle .btn {
+    font-size: .85rem;
+    border-color: #d1d5db;
+    transition: all .2s ease;
+}
+.mode-toggle .btn.active,
+.mode-toggle .btn:active {
+    background: var(--fb-primary) !important;
+    border-color: var(--fb-primary) !important;
+    color: #fff !important;
+}
+.mode-toggle .btn:hover:not(.active) {
+    background: #f0f4f8;
+    border-color: var(--fb-secondary);
+}
+
+/* ── Day Button ─────────────────────────────────────────────────── */
+.day-btn {
+    min-width: 68px;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: .85rem;
+    background: #fff;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+.day-btn:hover {
+    border-color: var(--fb-secondary);
+    background: #f0f7ff;
+}
+.day-btn.active {
+    border-color: var(--fb-primary);
+    background: var(--fb-primary);
+    color: #fff;
+}
+.day-btn .day-label {
+    font-size: .7rem;
+    opacity: .8;
+}
+.day-btn .day-date {
+    font-weight: 600;
+}
+
+/* ── Avatar Circle ──────────────────────────────────────────────── */
+.avatar-circle {
+    display: inline-grid;
+    place-items: center;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: .8rem;
+    color: #fff;
+    background: var(--fb-secondary);
+}
+
+/* ── Badge Status ───────────────────────────────────────────────── */
+.badge-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+}
+.badge-status.status-confirmed { background: #dcfce7; color: #166534; }
+.badge-status.status-pending   { background: #fef3c7; color: #92400e; }
+.badge-status.status-cancelled { background: #f3f4f6; color: #6b7280; }
+.badge-status.status-monthly   { background: #dbeafe; color: #1e40af; }
+.badge-status.status-hourly    { background: #ede9fe; color: #5b21b6; }
+
+/* ── Wizard Step Indicator ──────────────────────────────────────── */
+.wizard-step-badge {
+    display: inline-grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--fb-primary);
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ── Form Controls ──────────────────────────────────────────────── */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--fb-secondary);
+    box-shadow: 0 0 0 .2rem rgba(46, 117, 182, .2);
+}
+
+/* ── Primary Button Override ────────────────────────────────────── */
+.btn-primary {
+    background: var(--fb-primary);
+    border-color: var(--fb-primary);
+}
+.btn-primary:hover {
+    background: var(--fb-secondary);
+    border-color: var(--fb-secondary);
+}
+.btn-outline-primary {
+    color: var(--fb-primary);
+    border-color: var(--fb-primary);
+}
+.btn-outline-primary:hover {
+    background: var(--fb-primary);
+    border-color: var(--fb-primary);
+    color: #fff;
+}
+
+/* ── Legend Dot ──────────────────────────────────────────────────── */
+.legend-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,.08);
+}
+
+/* ── Hover White for Navbar ─────────────────────────────────────── */
+.hover-white:hover {
+    color: #fff !important;
+    opacity: 1 !important;
+}
+
+/* ── QR Placeholder ─────────────────────────────────────────────── */
+.qr-placeholder {
+    width: 220px;
+    height: 220px;
+    border: 2px dashed #d1d5db;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, #f8fafc, #fff);
+    display: grid;
+    place-items: center;
+    margin: 0 auto;
+}
+
+/* ── Countdown Badge ────────────────────────────────────────────── */
+.countdown-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: #fef3c7;
+    color: #92400e;
+    font-weight: 600;
+    font-size: .9rem;
+}
+
+/* ── Notification unread ────────────────────────────────────────── */
+.notification-unread {
+    background: rgba(46, 117, 182, .05);
+    border-color: rgba(46, 117, 182, .2) !important;
+}
+.notification-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--fb-secondary);
+    flex-shrink: 0;
+    margin-top: 6px;
+}
+
+/* ── Responsive tweaks ──────────────────────────────────────────── */
+@media (max-width: 767.98px) {
+    .slot-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 cột để ô to hơn trên mobile */
+        gap: 10px;
+    }
+    .slot-cell {
+        padding: 14px 6px;
+        font-size: .9rem;
+    }
+    .hero-section h1 {
+        font-size: 1.8rem;
+    }
+}
