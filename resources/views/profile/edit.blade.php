@@ -10,11 +10,11 @@
     <div class="card-fb mt-4 p-4">
         <div class="d-flex align-items-center gap-4 mb-4">
             <div class="avatar-circle" style="width:80px;height:80px;font-size:1.6rem;background:var(--fb-primary);">
-                {{ strtoupper(substr(Auth::user()->name ?? 'NA', 0, 2)) }}
+                {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 2)) }}
             </div>
             <div>
-                <h2 class="fs-5 fw-bold mb-1">{{ Auth::user()->name ?? 'Nguyễn An' }}</h2>
-                <p class="text-muted small mb-0">{{ Auth::user()->email ?? 'an.nguyen@gmail.com' }}</p>
+                <h2 class="fs-5 fw-bold mb-1">{{ Auth::user()->name }}</h2>
+                <p class="text-muted small mb-0">{{ Auth::user()->email }}</p>
                 <span class="badge-status status-confirmed mt-1">Đã xác minh</span>
             </div>
         </div>
@@ -26,19 +26,19 @@
             <div class="row g-3">
                 <div class="col-sm-6">
                     <label for="name" class="form-label small fw-semibold">Họ tên</label>
-                    <input type="text" class="form-control rounded-3" id="name" name="name" value="{{ Auth::user()->name ?? 'Nguyễn An' }}">
+                    <input type="text" class="form-control rounded-3" id="name" name="name" value="{{ Auth::user()->name }}">
                 </div>
                 <div class="col-sm-6">
                     <label for="email" class="form-label small fw-semibold">Email</label>
-                    <input type="email" class="form-control rounded-3" id="email" name="email" value="{{ Auth::user()->email ?? 'an.nguyen@gmail.com' }}">
+                    <input type="email" class="form-control rounded-3" id="email" name="email" value="{{ Auth::user()->email }}" readonly>
                 </div>
                 <div class="col-sm-6">
                     <label for="phone" class="form-label small fw-semibold">Số điện thoại</label>
-                    <input type="tel" class="form-control rounded-3" id="phone" name="phone" value="{{ Auth::user()->phone ?? '0912 345 678' }}">
+                    <input type="tel" class="form-control rounded-3" id="phone" name="phone" value="{{ Auth::user()->phone }}">
                 </div>
                 <div class="col-sm-6">
                     <label for="dob" class="form-label small fw-semibold">Ngày sinh</label>
-                    <input type="date" class="form-control rounded-3" id="dob" name="dob" value="{{ Auth::user()->dob ?? '1995-04-20' }}">
+                    <input type="date" class="form-control rounded-3" id="dob" name="dob" value="{{ Auth::user()->dob }}">
                 </div>
             </div>
 
@@ -78,19 +78,19 @@
         <div class="row g-3 mt-2">
             <div class="col-sm-4">
                 <div class="rounded-4 p-3 text-center" style="background:#f0f4f8;">
-                    <div class="fs-3 fw-bold" style="color:var(--fb-primary);">12</div>
+                    <div class="fs-3 fw-bold" style="color:var(--fb-primary);">0</div>
                     <div class="text-muted small">Lượt đặt sân</div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="rounded-4 p-3 text-center" style="background:#f0f4f8;">
-                    <div class="fs-3 fw-bold" style="color:var(--fb-primary);">3.6M</div>
+                    <div class="fs-3 fw-bold" style="color:var(--fb-primary);">0</div>
                     <div class="text-muted small">Tổng chi tiêu</div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="rounded-4 p-3 text-center" style="background:#f0f4f8;">
-                    <div class="fs-3 fw-bold" style="color:var(--fb-primary);">1</div>
+                    <div class="fs-3 fw-bold" style="color:var(--fb-primary);">0</div>
                     <div class="text-muted small">HĐ tháng hiện tại</div>
                 </div>
             </div>
