@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pitch extends Model
 {
-    protected $fillable = ['name', 'pitch_type', 'description', 'price_per_hour', 'status', 'image_url'];
+    protected $fillable = ['name', 'pitch_type', 'description', 'price_per_hour', 'status', 'image_url', 'address', 'latitude', 'longitude'];
 
     public function timeSlots() { return $this->hasMany(TimeSlot::class); }
     public function bookings() { return $this->hasMany(Booking::class); }

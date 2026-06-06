@@ -60,11 +60,11 @@
                 </div>
                 <div class="col-sm-6">
                     <label for="password" class="form-label small fw-semibold">Mật khẩu mới</label>
-                    <input type="password" class="form-control rounded-3" id="password" name="password">
+                    <input type="password" class="form-control rounded-3" id="password" name="password" minlength="6">
                 </div>
                 <div class="col-sm-6">
                     <label for="password_confirmation" class="form-label small fw-semibold">Xác nhận mật khẩu mới</label>
-                    <input type="password" class="form-control rounded-3" id="password_confirmation" name="password_confirmation">
+                    <input type="password" class="form-control rounded-3" id="password_confirmation" name="password_confirmation" minlength="6">
                 </div>
             </div>
 

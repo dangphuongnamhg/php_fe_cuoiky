@@ -57,7 +57,7 @@
         <div class="d-flex flex-column gap-2 mt-3">
             <label class="d-flex align-items-center justify-content-between rounded-3 border p-3 service-check" style="cursor:pointer;transition:all .2s;">
                 <span class="d-flex align-items-center gap-3">
-                    <input type="checkbox" class="form-check-input cb-extra" data-price="{{ $freeTea ? 0 : 70000 }}" {{ $freeTea ? 'checked disabled' : '' }} style="accent-color:var(--fb-primary);">
+                    <input type="checkbox" class="form-check-input cb-extra" data-price="{{ $freeTea ? 0 : 70000 }}" data-name="Trà đá" {{ $freeTea ? 'checked disabled' : '' }} style="accent-color:var(--fb-primary);">
                     <span class="small fw-medium">Trà đá</span>
                 </span>
                 <span class="small fw-semibold">
@@ -70,14 +70,14 @@
             </label>
             <label class="d-flex align-items-center justify-content-between rounded-3 border p-3 service-check" style="cursor:pointer;transition:all .2s;">
                 <span class="d-flex align-items-center gap-3">
-                    <input type="checkbox" class="form-check-input cb-extra" data-price="50000" style="accent-color:var(--fb-primary);">
+                    <input type="checkbox" class="form-check-input cb-extra" data-price="50000" data-name="Thuê bóng" style="accent-color:var(--fb-primary);">
                     <span class="small fw-medium">Thuê bóng</span>
                 </span>
                 <span class="small fw-semibold">50,000đ/buổi</span>
             </label>
             <label class="d-flex align-items-center justify-content-between rounded-3 border p-3 service-check" style="cursor:pointer;transition:all .2s;">
                 <span class="d-flex align-items-center gap-3">
-                    <input type="checkbox" class="form-check-input cb-extra" data-price="50000" style="accent-color:var(--fb-primary);">
+                    <input type="checkbox" class="form-check-input cb-extra" data-price="50000" data-name="Áo pit (thuê)" style="accent-color:var(--fb-primary);">
                     <span class="small fw-medium">Áo pit (thuê)</span>
                 </span>
                 <span class="small fw-semibold">50,000đ/buổi</span>
@@ -103,7 +103,23 @@
                 <span style="color:var(--fb-primary);font-size:1.1rem;" id="total-display">{{ number_format($basePrice) }}đ</span>
             </div>
         </div>
-        <a href="{{ url('/payments/qr') }}" class="btn btn-primary w-100 rounded-3 py-3 fw-semibold mt-4" id="pay-btn">Thanh toán VNPay</a>
+        <form id="payment-form" method="POST" action="{{ route('bookings.store') }}">
+            @csrf
+            <input type="hidden" name="pitch_id" value="{{ $pitch->id ?? request('pitch_id') }}">
+            <input type="hidden" name="type" value="{{ request('type', 'hourly') }}">
+            @if(request('type') === 'monthly')
+                <input type="hidden" name="month" value="{{ request('month') }}">
+                <input type="hidden" name="day" value="{{ request('day') }}">
+            @else
+                <input type="hidden" name="booking_date" value="{{ request('date') }}">
+            @endif
+            <input type="hidden" name="start_time" value="{{ request('start') }}">
+            <input type="hidden" name="end_time" value="{{ request('end') }}">
+            <input type="hidden" name="extras_price" id="input-extras-price" value="0">
+            <input type="hidden" name="extras_notes" id="input-extras-notes" value="">
+            
+            <button type="submit" class="btn btn-primary w-100 rounded-3 py-3 fw-semibold mt-4" id="pay-btn">Thanh toán VNPay</button>
+        </form>
     </div>
 </div>
 
@@ -118,10 +134,14 @@
 
     function recalc() {
         var extras = 0;
+        var extrasNotes = [];
         checkboxes.forEach(function(cb) {
             var label = cb.closest('.service-check');
             if (cb.checked) {
                 extras += parseInt(cb.dataset.price) * sessions;
+                if(cb.dataset.name) {
+                    extrasNotes.push(cb.dataset.name);
+                }
                 label.style.borderColor = 'var(--fb-primary)';
                 label.style.background = '#f0f7ff';
             } else {
@@ -131,6 +151,9 @@
         });
         document.getElementById('extras-display').textContent = extras.toLocaleString('vi-VN') + 'đ';
         document.getElementById('total-display').textContent = (basePrice + extras).toLocaleString('vi-VN') + 'đ';
+        
+        document.getElementById('input-extras-price').value = extras;
+        document.getElementById('input-extras-notes').value = extrasNotes.join(', ');
     }
 
     checkboxes.forEach(function(cb) { cb.addEventListener('change', recalc); });

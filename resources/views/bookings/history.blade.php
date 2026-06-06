@@ -49,7 +49,7 @@
                         <td class="px-4 py-3 text-end fw-semibold">{{ number_format($b->total) }}đ</td>
                         <td class="px-4 py-3 text-end">
                             @if(in_array($b->status, ['pending', 'confirmed']))
-                            <form method="POST" action="{{ route('bookings.cancel', $b) }}" class="d-inline">
+                            <form method="POST" action="{{ route('bookings.cancel', isset($b->id) ? $b->id : 0) }}" class="d-inline">
                                 @csrf
                                 @method('PATCH')
                                 <button type="submit" class="btn btn-outline-danger btn-sm rounded-2 px-3" style="font-size:.75rem;" onclick="return confirm('Bạn chắc chắn muốn hủy?')">
@@ -60,40 +60,12 @@
                         </td>
                     </tr>
                     @empty
-                    {{-- Mock data fallback --}}
-                    @foreach([
-                        (object)['code'=>'FB-202607-0042','pitch_name'=>'Sân Bóng Đá A1','date'=>'06/06/2026','time_slot'=>'18:00-20:00','type'=>'hourly','status'=>'confirmed','total'=>720000],
-                        (object)['code'=>'FB-202607-0035','pitch_name'=>'Sân Pickleball C1','date'=>'Tháng 06/2026','time_slot'=>'T4 19:00-20:30','type'=>'monthly','status'=>'confirmed','total'=>3600000],
-                        (object)['code'=>'FB-202606-0028','pitch_name'=>'Sân Bóng Đá B2','date'=>'29/05/2026','time_slot'=>'07:00-08:30','type'=>'hourly','status'=>'pending','total'=>675000],
-                        (object)['code'=>'FB-202605-0019','pitch_name'=>'Sân Pickleball C2','date'=>'12/05/2026','time_slot'=>'20:00-21:00','type'=>'hourly','status'=>'cancelled','total'=>220000],
-                    ] as $b)
                     <tr>
-                        <td class="px-4 py-3 font-monospace small">{{ $b->code }}</td>
-                        <td class="px-4 py-3 fw-medium">{{ $b->pitch_name }}</td>
-                        <td class="px-4 py-3">{{ $b->date }}</td>
-                        <td class="px-4 py-3">{{ $b->time_slot }}</td>
-                        <td class="px-4 py-3">
-                            <span class="badge-status {{ $b->type === 'monthly' ? 'status-monthly' : 'status-hourly' }}">
-                                {{ $b->type === 'monthly' ? 'Tháng cố định' : 'Theo giờ' }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-3">
-                            @if($b->status === 'confirmed')
-                                <span class="badge-status status-confirmed">Đã xác nhận</span>
-                            @elseif($b->status === 'pending')
-                                <span class="badge-status status-pending">Chờ xác nhận</span>
-                            @else
-                                <span class="badge-status status-cancelled">Đã hủy</span>
-                            @endif
-                        </td>
-                        <td class="px-4 py-3 text-end fw-semibold">{{ number_format($b->total) }}đ</td>
-                        <td class="px-4 py-3 text-end">
-                            @if(in_array($b->status, ['pending', 'confirmed']))
-                            <button class="btn btn-outline-danger btn-sm rounded-2 px-3" style="font-size:.75rem;">Hủy</button>
-                            @endif
+                        <td colspan="8" class="text-center py-4 text-muted">
+                            <i class="bi bi-calendar-x fs-2 mb-2 d-block"></i>
+                            Bạn chưa có lịch sử đặt sân nào.
                         </td>
                     </tr>
-                    @endforeach
                     @endforelse
                 </tbody>
             </table>
@@ -102,3 +74,34 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const payment = urlParams.get('payment');
+    const msg = urlParams.get('msg');
+    
+    if (payment === 'success' || payment === 'monthly_success') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thanh toán thành công',
+            text: 'Đơn đặt sân của bạn đã được thanh toán và xác nhận!',
+            confirmButtonText: 'Tuyệt vời',
+            confirmButtonColor: 'var(--fb-primary)'
+        }).then(() => {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        });
+    } else if (payment === 'failed' || payment === 'error' || payment === 'conflict') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Thanh toán thất bại',
+            text: msg || 'Có lỗi xảy ra trong quá trình thanh toán.',
+            confirmButtonText: 'Đóng'
+        }).then(() => {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        });
+    }
+});
+</script>
+@endpush

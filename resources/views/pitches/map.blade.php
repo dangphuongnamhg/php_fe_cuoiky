@@ -11,7 +11,8 @@
     .filter-pills { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); z-index: 500; }
     .layer-switch { position: absolute; top: 16px; right: 60px; z-index: 500; }
     .sidebar-item { display: flex; gap: 12px; padding: 16px; cursor: pointer; border-bottom: 1px solid #f0f0f0; transition: background .2s; }
-    .sidebar-item:hover, .sidebar-item.active { background: #f0f7ff; }
+    .sidebar-item:hover { background: #f0f7ff; }
+    .sidebar-item.active { background: #e0f2fe; border-left: 4px solid var(--fb-primary); padding-left: 12px; }
     .sidebar-item img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
     .mobile-toggle { display: none; position: absolute; bottom: 24px; left: 16px; z-index: 500; }
     @media (max-width: 767.98px) {
@@ -76,14 +77,27 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function() {
-    var pitches = [
-        { id:'m1', name:'Sân Bóng Đá Thanh Xuân A', address:'12 Nguyễn Trãi, Q. Thanh Xuân', district:'Thanh Xuân', type:'football', subCount:3, image:'https://images.unsplash.com/photo-1556056504-5c7696c4c28d?w=200&q=80', lat:21.0001, lng:105.8062 },
-        { id:'m2', name:'Sân Bóng Đá Hai Bà Trưng B', address:'45 Bạch Mai, Q. Hai Bà Trưng', district:'Hai Bà Trưng', type:'football', subCount:2, image:'https://images.unsplash.com/photo-1459865264687-595d652de67e?w=200&q=80', lat:21.0049, lng:105.8542 },
-        { id:'m3', name:'Sân Bóng Đá Đống Đa C', address:'98 Thái Hà, Q. Đống Đa', district:'Đống Đa', type:'football', subCount:4, image:'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=200&q=80', lat:21.0136, lng:105.8194 },
-        { id:'m4', name:'Sân Pickleball Thanh Xuân D', address:'22 Khuất Duy Tiến, Q. Thanh Xuân', district:'Thanh Xuân', type:'pickleball', subCount:2, image:'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=200&q=80', lat:20.9942, lng:105.8001 },
-        { id:'m5', name:'Sân Pickleball Thanh Xuân E', address:'8 Lê Văn Lương, Q. Thanh Xuân', district:'Thanh Xuân', type:'pickleball', subCount:3, image:'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=200&q=80', lat:21.0072, lng:105.8023 },
-        { id:'m6', name:'Sân Pickleball Đống Đa F', address:'150 Tây Sơn, Q. Đống Đa', district:'Đống Đa', type:'pickleball', subCount:2, image:'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=200&q=80', lat:21.0098, lng:105.8261 }
-    ];
+    var backendPitches = @json($pitches);
+    var centerLat = 21.0060;
+    var centerLng = 105.8200;
+
+    var pitches = backendPitches.map(function(p) {
+        // Fallback for pitches without coordinates
+        var latOffset = Math.sin(p.id) * 0.06;
+        var lngOffset = Math.cos(p.id) * 0.06;
+
+        return {
+            id: p.id,
+            name: p.name,
+            address: p.address || 'Đang cập nhật địa chỉ',
+            district: 'Hà Nội',
+            type: p.pitch_type,
+            subCount: 1,
+            image: p.image_url || 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=200&q=80',
+            lat: p.latitude || (centerLat + latOffset),
+            lng: p.longitude || (centerLng + lngOffset)
+        };
+    });
 
     var map = L.map('leaflet-map').setView([21.0060, 105.8200], 14);
     var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' });
@@ -111,7 +125,7 @@
         list.forEach(function(p) {
             var icon = L.divIcon({ html: '<div style="font-size:1.6rem;text-shadow:0 2px 4px rgba(0,0,0,.3);">' + (p.type === 'football' ? '⚽' : '🏓') + '</div>', className: '', iconSize: [32, 32], iconAnchor: [16, 16] });
             var m = L.marker([p.lat, p.lng], { icon: icon }).addTo(map);
-            m.bindPopup('<div style="min-width:180px;"><img src="' + p.image + '" style="width:100%;height:80px;object-fit:cover;border-radius:8px;"><h6 class="mt-2 mb-1 fw-semibold">' + p.name + '</h6><p class="small text-muted mb-2">' + p.address + '</p><a href="/pitches/' + p.id + '" class="btn btn-primary btn-sm w-100 rounded-3">Đặt sân</a></div>');
+            m.bindPopup('<div style="min-width:180px;"><img src="' + p.image + '" style="width:100%;height:80px;object-fit:cover;border-radius:8px;"><h6 class="mt-2 mb-1 fw-semibold">' + p.name + '</h6><p class="small text-muted mb-2">' + p.address + '</p><div class="d-flex gap-2"><a href="/pitches/' + p.id + '" class="btn btn-primary btn-sm w-100 rounded-3">Đặt sân</a><a href="https://www.google.com/maps/dir/?api=1&destination=' + p.lat + ',' + p.lng + '" target="_blank" class="btn btn-outline-secondary btn-sm w-100 rounded-3" title="Chỉ đường"><i class="bi bi-cursor"></i></a></div></div>');
             m.on('click', function() { selectPitch(p.id); });
             markers[p.id] = m;
         });
@@ -148,7 +162,7 @@
                 '<span class="text-muted" style="font-size:.7rem;">' + p.subCount + ' sân</span></div>' +
                 '<div class="mt-2 d-flex gap-2">' +
                 '<a href="/pitches/' + p.id + '" class="btn btn-primary btn-sm rounded-2 px-3" style="font-size:.75rem;">Đặt sân</a>' +
-                '<a href="/pitches/' + p.id + '" class="btn btn-light btn-sm rounded-2 px-3" style="font-size:.75rem;">Chi tiết</a></div></div>';
+                '<a href="https://www.google.com/maps/dir/?api=1&destination=' + p.lat + ',' + p.lng + '" target="_blank" class="btn btn-light btn-sm rounded-2 px-3" style="font-size:.75rem;"><i class="bi bi-cursor"></i> Chỉ đường</a></div></div>';
             div.addEventListener('click', function() { selectPitch(p.id); });
             container.appendChild(div);
         });
@@ -161,6 +175,11 @@
         if (p) map.flyTo([p.lat, p.lng], 16);
         if (markers[id]) markers[id].openPopup();
         render();
+        
+        var activeItem = document.querySelector('.sidebar-item.active');
+        if (activeItem) {
+            activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
     }
 
     document.getElementById('map-search').addEventListener('input', function() {

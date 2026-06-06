@@ -173,8 +173,9 @@ body {
     color: #fff !important;
 }
 .mode-toggle .btn:hover:not(.active) {
-    background: #f0f4f8;
-    border-color: var(--fb-secondary);
+    background: #f0f4f8 !important;
+    border-color: var(--fb-secondary) !important;
+    color: var(--fb-primary) !important;
 }
 
 /* ── Day Button ─────────────────────────────────────────────────── */

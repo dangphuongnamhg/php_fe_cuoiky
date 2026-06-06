@@ -40,11 +40,12 @@
         <div class="col-sm-6 col-lg-4 pitch-card" data-type="{{ $pitch->pitch_type }}">
             <div class="card-fb h-100">
                 <div style="height:200px;overflow:hidden;position:relative;">
-                    <img src="{{ $pitch->image_url }}" alt="{{ $pitch->name }}" class="w-100 h-100" style="object-fit:cover;">
+                    <img src="{{ $pitch->image_url ?? 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=600&q=80' }}" alt="{{ $pitch->name }}" class="w-100 h-100" style="object-fit:cover;">
                     <span class="position-absolute top-0 start-0 m-3 badge rounded-pill {{ $pitch->pitch_type === 'football' ? 'text-bg-primary' : 'text-bg-info' }}">{{ $pitch->pitch_type === 'football' ? 'Bóng đá' : 'Pickleball' }}</span>
                 </div>
                 <div class="p-4">
                     <h5 class="fw-semibold mb-1">{{ $pitch->name }}</h5>
+                    <div class="text-muted small mb-2"><i class="bi bi-geo-alt"></i> {{ $pitch->address ?? 'Đang cập nhật địa chỉ' }}</div>
                     <p class="text-muted small mb-3" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $pitch->description }}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -118,16 +119,16 @@
         <h2 class="text-center fw-bold">Khách hàng nói gì về chúng tôi?</h2>
         <div class="row g-4 mt-3">
             @foreach([
-                ['name' => 'Minh Tuấn', 'badge' => '⚽ Đội bóng', 'initials' => 'MT', 'text' => 'Đặt sân nhanh kinh khủng! Chọn giờ, bấm thanh toán VNPay xong là có xác nhận ngay. Cả đội ai cũng thích.'],
-                ['name' => 'Thanh Hà', 'badge' => '🏓 Pickleball', 'initials' => 'TH', 'text' => 'Lưới giờ hiển thị rất rõ giờ nào còn trống, giờ nào đã đặt. Không bao giờ bị nhầm lịch nữa.'],
-                ['name' => 'Đức Khải', 'badge' => '⚽ Bóng đá', 'initials' => 'ĐK', 'text' => 'Hợp đồng cố định tháng tiện lắm, tháng nào cũng tự nhắc gia hạn. Không cần nhớ nữa.'],
+                ['name' => 'Minh Tuấn', 'badge' => '⚽ Đội bóng', 'avatar' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop', 'text' => 'Đặt sân nhanh kinh khủng! Chọn giờ, bấm thanh toán VNPay xong là có xác nhận ngay. Cả đội ai cũng thích.'],
+                ['name' => 'Thanh Hà', 'badge' => '🏓 Pickleball', 'avatar' => 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop', 'text' => 'Lưới giờ hiển thị rất rõ giờ nào còn trống, giờ nào đã đặt. Không bao giờ bị nhầm lịch nữa.'],
+                ['name' => 'Đức Khải', 'badge' => '⚽ Bóng đá', 'avatar' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop', 'text' => 'Hợp đồng cố định tháng tiện lắm, tháng nào cũng tự nhắc gia hạn. Không cần nhớ nữa.'],
             ] as $r)
             <div class="col-md-4">
-                <div class="card-fb review-card p-4">
+                <div class="card-fb review-card p-4 h-100 d-flex flex-column">
                     <div class="quote-mark">&rdquo;</div>
-                    <p class="fst-italic text-secondary">&ldquo;{{ $r['text'] }}&rdquo;</p>
+                    <p class="fst-italic text-secondary flex-grow-1">&ldquo;{{ $r['text'] }}&rdquo;</p>
                     <div class="d-flex align-items-center gap-3 mt-3">
-                        <div class="avatar-circle" style="width:40px;height:40px;background:#e5e7eb;">{{ $r['initials'] }}</div>
+                        <img src="{{ $r['avatar'] }}" alt="{{ $r['name'] }}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;">
                         <div>
                             <div class="small fw-semibold">{{ $r['name'] }}</div>
                             <div class="text-muted" style="font-size:0.7rem;">{{ $r['badge'] }}</div>
@@ -150,10 +151,29 @@ document.getElementById('type-filter')?.addEventListener('click', function(e) {
     if (!btn) return;
     this.querySelectorAll('button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    
     const type = btn.dataset.type;
     document.querySelectorAll('.pitch-card').forEach(card => {
         card.style.display = (type === 'all' || card.dataset.type === type) ? '' : 'none';
     });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const payment = urlParams.get('payment');
+    const msg = urlParams.get('msg');
+    
+    if (payment === 'conflict') {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Rất tiếc',
+            text: msg || 'Khung giờ này đã có người đặt trước trong lúc bạn đang chờ thanh toán.',
+            confirmButtonText: 'Đóng',
+            confirmButtonColor: 'var(--fb-primary)'
+        }).then(() => {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        });
+    }
 });
 </script>
 @endpush

@@ -28,6 +28,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');
+Route::get('/reset-password', [AuthController::class, 'showResetPassword'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
 
 // User (auth)
 Route::middleware('auth')->group(function () {
@@ -41,7 +46,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.readAll');
     Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/renew/{monthlyBooking}', [BookingController::class, 'renew'])->name('bookings.renew');
 });
 
@@ -62,3 +69,4 @@ Route::middleware(['auth', 'check.role:admin'])->prefix('admin')->name('admin.')
     Route::post('/timeslots/toggle', [TimeSlotController::class, 'toggle'])->name('timeslots.toggle');
     Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
 });
+

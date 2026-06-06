@@ -7,10 +7,16 @@
         {{-- LEFT — Pitch Info --}}
         <div class="col-lg-5">
             <div class="card-fb overflow-hidden">
-                <img src="{{ $pitch->image_url }}" alt="{{ $pitch->name }}" class="w-100" style="height:260px;object-fit:cover;">
+                <img src="{{ $pitch->image_url ?? 'https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1600&q=80' }}" alt="{{ $pitch->name }}" class="w-100" style="height:260px;object-fit:cover;">
                 <div class="p-4">
                     <span class="badge rounded-pill {{ $pitch->pitch_type === 'football' ? 'text-bg-primary' : 'text-bg-info' }} mb-2">{{ $pitch->pitch_type === 'football' ? 'Bóng đá' : 'Pickleball' }}</span>
-                    <h1 class="fs-4 fw-bold">{{ $pitch->name }}</h1>
+                    <h1 class="fs-4 fw-bold mb-1">{{ $pitch->name }}</h1>
+                    <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                        <div class="text-muted small"><i class="bi bi-geo-alt"></i> {{ $pitch->address ?? 'Đang cập nhật địa chỉ' }}</div>
+                        @if($pitch->latitude && $pitch->longitude)
+                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ $pitch->latitude }},{{ $pitch->longitude }}" target="_blank" class="btn btn-outline-secondary btn-sm rounded-pill" style="padding: 2px 10px; font-size: 0.75rem;"><i class="bi bi-cursor"></i> Chỉ đường</a>
+                        @endif
+                    </div>
                     <p class="text-muted small mt-2">{{ $pitch->description }}</p>
                     <div class="rounded-4 p-3 mt-3" style="background:#f0f4f8;">
                         <div class="text-muted" style="font-size:.7rem;">Giá cơ bản</div>
@@ -35,7 +41,7 @@
                 <div class="d-flex flex-wrap gap-3 mt-3" style="font-size:.75rem;">
                     <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#e8f5e9;"></span> Giờ thường</span>
                     <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#fff3e0;"></span> Giờ vàng (x1.5)</span>
-                    <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#e3f2fd;"></span> Cuối tuần (x1.25)</span>
+                    <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#f3e8ff;"></span> Cuối tuần (x1.25)</span>
                     <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#ffebee;"></span> Đã đặt</span>
                     <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#f5f5f5;"></span> Giữ chỗ</span>
                     <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:var(--fb-primary);"></span> Đang chọn</span>
@@ -69,15 +75,16 @@
 
     const dayContainer = document.getElementById('day-selector');
     const days = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 1; i <= 6; i++) {
         const d = new Date();
         d.setDate(d.getDate() + i);
         days.push(d);
+        const arrayIdx = i - 1;
         const btn = document.createElement('button');
-        btn.className = 'day-btn' + (i === 0 ? ' active' : '');
+        btn.className = 'day-btn' + (arrayIdx === 0 ? ' active' : '');
         btn.dataset.offset = i;
-        btn.innerHTML = '<div class="day-label">' + dayNames[d.getDay()] + '</div><div class="day-date">' + d.getDate() + '/' + (d.getMonth()+1) + '</div>';
-        btn.addEventListener('click', function() { selectDay(i); });
+        btn.innerHTML = '<div class="day-label">' + dayNames[d.getDay()] + '</div><div class="day-date">' + String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth()+1).padStart(2, '0') + '</div>';
+        btn.addEventListener('click', function() { selectDay(arrayIdx); });
         dayContainer.appendChild(btn);
     }
 
