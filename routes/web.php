@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\ContractController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TimeSlotController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Admin\SettingController;
 
 // Public
 Route::get('/', [PitchController::class, 'index'])->name('home');
@@ -38,11 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/payments/qr', [PaymentController::class, 'qr'])->name('payments.qr');
     Route::get('/payments/result', [PaymentController::class, 'result'])->name('payments.result');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
     Route::patch('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.readAll');
     Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/renew/{monthlyBooking}', [BookingController::class, 'renew'])->name('bookings.renew');
+    Route::post('/renew/{monthlyBooking}', [BookingController::class, 'renewStore'])->name('bookings.renew.store');
 });
 
 // Admin
@@ -56,9 +59,15 @@ Route::middleware(['auth', 'check.role:admin'])->prefix('admin')->name('admin.')
     Route::post('/pos', [PosController::class, 'store'])->name('pos.store');
     Route::get('/contracts', [ContractController::class, 'index'])->name('contracts.index');
     Route::patch('/contracts/{lock}/release', [ContractController::class, 'releaseLock'])->name('contracts.release');
+    Route::patch('/contracts/{lock}/relock', [ContractController::class, 'relockLock'])->name('contracts.relock');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::patch('/users/{user}/toggle-lock', [UserController::class, 'toggleLock'])->name('users.toggleLock');
     Route::get('/timeslots', [TimeSlotController::class, 'index'])->name('timeslots.index');
     Route::post('/timeslots/toggle', [TimeSlotController::class, 'toggle'])->name('timeslots.toggle');
     Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 });

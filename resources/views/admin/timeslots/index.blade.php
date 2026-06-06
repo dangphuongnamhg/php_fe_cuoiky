@@ -1,15 +1,15 @@
 @extends('layouts.admin')
-@section('title', 'Khung giờ — FieldBook Admin')
+@section('title', 'Khung giờ — SanGo Admin')
 @section('content')
-<h1 class="h4 fw-bold">Quản lý khung giờ</h1>
-<p class="text-muted small">Cấu hình khung giờ hoạt động cho từng sân.</p>
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <h1 class="h3 fw-bold mb-1">Quản lý khung giờ</h1>
+    </div>
+</div>
 
 {{-- Flash Messages --}}
 @if(session('success'))
-<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-    <i class="bi bi-check-circle me-1"></i> {{ session('success') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-</div>
+<!-- Global SweetAlert handles this -->
 @endif
 
 {{-- Filters --}}

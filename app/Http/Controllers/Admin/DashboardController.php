@@ -13,7 +13,11 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalRevenue = Payment::where('status', 'completed')->sum('amount');
+        // Tổng doanh thu: Tổng tiền các booking confirmed
+        $totalRevenue = Booking::where('status', 'confirmed')->sum('total_price');
+        
+        // Số đơn đặt sân: Tổng booking + booking hôm nay
+        $totalBookings = Booking::count();
         $todayBookings = Booking::whereDate('booking_date', Carbon::today())->count();
         $pendingCount = Booking::where('status', 'pending')->count();
         $expiringContracts = MonthlyBooking::where('status', 'active')
@@ -22,10 +26,11 @@ class DashboardController extends Controller
             ->get();
         $activeLocks = MonthlyBookingLock::where('status', 'active')
             ->with(['user', 'pitch'])
-            ->get();
+            ->paginate(5);
 
         return view('admin.dashboard', compact(
             'totalRevenue',
+            'totalBookings',
             'todayBookings',
             'pendingCount',
             'expiringContracts',

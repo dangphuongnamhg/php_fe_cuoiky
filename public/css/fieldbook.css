@@ -19,7 +19,23 @@
 body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     color: #1e293b;
-    background: #f8fafc;
+    background: #f1f5f9; /* SaaS light gray background */
+}
+
+/* Custom Scrollbar for sleek UI */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 /* ── card-fb ────────────────────────────────────────────────────── */
@@ -68,39 +84,39 @@ body {
     user-select: none;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
-.slot-cell:hover:not(.slot-booked):not(.slot-locked) {
+.slot-cell:hover:not(.booked):not(.slot-locked) {
     transform: scale(1.05);
 }
 
 /* Slot states */
-.slot-available {
+.available {
     background: #e8f5e9;
     color: #2e7d32;
     border-color: #c8e6c9;
 }
-.slot-available:hover {
+.available:hover {
     background: #c8e6c9;
     border-color: #81c784;
 }
-.slot-premium {
+.premium {
     background: #fff3e0;
     color: #e65100;
     border-color: #ffe0b2;
 }
-.slot-premium:hover {
+.premium:hover {
     background: #ffe0b2;
     border-color: #ffb74d;
 }
-.slot-weekend {
+.weekend {
     background: #f3e8ff; /* Tím nhạt */
     color: #6b21a8;
     border-color: #e9d5ff;
 }
-.slot-weekend:hover {
+.weekend:hover {
     background: #e9d5ff;
     border-color: #d8b4fe;
 }
-.slot-booked {
+.booked {
     background: #ffebee;
     color: #c62828;
     border-color: #ffcdd2;
@@ -113,11 +129,19 @@ body {
     border-color: #e0e0e0;
     cursor: not-allowed;
 }
-.slot-selected {
+.selected, .selected-start, .selected-end {
     background: var(--fb-primary) !important;
     color: #fff !important;
     border-color: var(--fb-secondary) !important;
     box-shadow: 0 0 0 3px rgba(46, 117, 182, .3);
+}
+.selected-start {
+    border-top-left-radius: 10px !important;
+    border-bottom-left-radius: 10px !important;
+}
+.selected-end {
+    border-top-right-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
 }
 
 /* ── Step Circle ────────────────────────────────────────────────── */
