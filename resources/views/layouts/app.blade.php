@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'FieldBook — Đặt sân bóng đá & Pickleball')</title>
+    <title>@yield('title', 'SanGo — Đặt sân bóng đá & Pickleball')</title>
     <meta name="description" content="@yield('description', 'Đặt lịch sân bóng đá và pickleball nhanh chóng, tiện lợi.')">
 
     <!-- Google Fonts -->
@@ -18,7 +18,7 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-    <!-- FieldBook CSS -->
+    <!-- SanGo CSS -->
     <link href="{{ asset('css/fieldbook.css') }}" rel="stylesheet">
 
     @stack('styles')
@@ -28,7 +28,8 @@
     <nav class="navbar navbar-expand-lg sticky-top" style="background:var(--fb-primary);backdrop-filter:blur(12px);">
         <div class="container" style="max-width:1280px;">
             <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="{{ url('/') }}">
-                <span style="font-size:1.4rem;">⚽</span> FieldBook
+                <img src="{{ asset('images/logo1.png') }}" alt="Logo" style="height:40px; object-fit:contain;">
+                <span class="text-white" style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.6rem; letter-spacing: -0.5px;">SanGo</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false">
                 <i class="bi bi-list text-white fs-4"></i>
@@ -92,7 +93,7 @@
         <div class="container" style="max-width:1280px;">
             <div class="row g-4">
                 <div class="col-md-4">
-                    <h5 class="fw-bold text-white mb-3">⚽ FieldBook</h5>
+                    <h5 class="fw-bold text-white mb-3">⚽ SanGo</h5>
                     <p class="small mb-0">Hệ thống đặt sân bóng đá & Pickleball trực tuyến hàng đầu Việt Nam.</p>
                 </div>
                 <div class="col-md-4">
@@ -113,7 +114,7 @@
                 </div>
             </div>
             <hr class="my-4" style="border-color:rgba(255,255,255,.15);">
-            <p class="text-center small mb-0">&copy; {{ date('Y') }} FieldBook. All rights reserved.</p>
+            <p class="text-center small mb-0">&copy; {{ date('Y') }} SanGo. All rights reserved.</p>
         </div>
     </footer>
 
@@ -124,13 +125,13 @@
     <script>
     (function() {
         setInterval(function() {
-            fetch('{{ url("/notifications/count") }}')
+            fetch('{{ route('notifications.unreadCount') }}')
                 .then(r => r.json())
                 .then(data => {
                     var badge = document.getElementById('nav-notification-badge');
                     if (badge) {
                         if (data.count > 0) {
-                            badge.textContent = data.count;
+                            badge.textContent = data.count > 99 ? '99+' : data.count;
                             badge.style.display = '';
                         } else {
                             badge.style.display = 'none';

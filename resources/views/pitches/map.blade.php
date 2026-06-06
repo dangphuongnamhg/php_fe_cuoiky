@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Tìm sân bằng bản đồ — FieldBook')
+@section('title', 'Tìm sân bằng bản đồ — SanGo')
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>

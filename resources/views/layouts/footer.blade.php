@@ -4,7 +4,7 @@
             <div class="col-lg-3">
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <div class="rounded-3 d-flex align-items-center justify-content-center text-white fw-bold" style="width:36px;height:36px;background:var(--fb-primary);">FB</div>
-                    <span class="fw-bold fs-5" style="color:var(--fb-primary);">FieldBook</span>
+                    <span class="fw-bold fs-5" style="color:var(--fb-primary);">SanGo</span>
                 </div>
                 <p class="text-muted small">Hệ thống đặt lịch sân bóng đá & Pickleball hiện đại, nhanh chóng, tiện lợi.</p>
             </div>
@@ -34,6 +34,6 @@
             </div>
         </div>
         <hr class="my-4">
-        <p class="text-center text-muted small mb-0">&copy; {{ date('Y') }} FieldBook. All rights reserved.</p>
+        <p class="text-center text-muted small mb-0">&copy; {{ date('Y') }} SanGo. All rights reserved.</p>
     </div>
 </footer>

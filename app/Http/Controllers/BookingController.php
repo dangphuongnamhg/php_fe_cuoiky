@@ -37,6 +37,31 @@ class BookingController extends Controller
 
     public function renew(MonthlyBooking $monthlyBooking)
     {
+        if ($monthlyBooking->user_id !== auth()->id()) {
+            abort(403);
+        }
         return view('bookings.renew', compact('monthlyBooking'));
+    }
+
+    public function renewStore(Request $request, MonthlyBooking $monthlyBooking)
+    {
+        if ($monthlyBooking->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'renewal_period' => 'required|integer|in:1,3,6',
+            'total_price' => 'required|numeric'
+        ]);
+
+        session([
+            'pending_renewal' => [
+                'monthly_booking_id' => $monthlyBooking->id,
+                'months' => $request->renewal_period,
+                'total_price' => $request->total_price,
+            ]
+        ]);
+
+        return redirect()->route('payments.qr');
     }
 }

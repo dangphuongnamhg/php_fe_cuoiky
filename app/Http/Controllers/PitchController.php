@@ -18,12 +18,23 @@ class PitchController extends Controller
 
     public function show(Pitch $pitch, Request $request)
     {
-        $date = $request->get('date', Carbon::tomorrow()->format('Y-m-d'));
+        $today = Carbon::today();
+        $nextWeek = Carbon::today()->addDays(7);
+        
+        // Fetch bookings for the next 7 days
         $bookings = Booking::where('pitch_id', $pitch->id)
-            ->where('booking_date', $date)
+            ->whereBetween('booking_date', [$today->toDateString(), $nextWeek->toDateString()])
             ->whereIn('status', ['pending', 'confirmed'])
             ->get();
-        return view('pitches.show', compact('pitch', 'date', 'bookings'));
+            
+        // Fetch active locks that are currently valid
+        $locks = \App\Models\MonthlyBookingLock::where('pitch_id', $pitch->id)
+            ->where('status', 'active')
+            ->where('active_from', '<=', now())
+            ->where('expires_at', '>=', now())
+            ->get();
+
+        return view('pitches.show', compact('pitch', 'bookings', 'locks'));
     }
 
     public function monthly(Pitch $pitch)

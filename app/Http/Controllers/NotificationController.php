@@ -23,4 +23,11 @@ class NotificationController extends Controller
         auth()->user()->notifications()->where('id', $id)->delete();
         return back();
     }
+
+    public function unreadCount()
+    {
+        return response()->json([
+            'count' => auth()->user()->unreadNotifications()->count()
+        ]);
+    }
 }

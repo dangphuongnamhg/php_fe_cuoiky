@@ -2,7 +2,7 @@
     <div class="container-fluid" style="max-width:1280px;">
         <a href="{{ url('/') }}" class="navbar-brand d-flex align-items-center gap-2">
             <div class="rounded-3 d-flex align-items-center justify-content-center text-white fw-bold" style="width:36px;height:36px;background:var(--fb-primary);font-size:0.85rem;">FB</div>
-            <span class="fw-bold d-none d-sm-inline" style="color:var(--fb-primary);">FieldBook</span>
+            <span class="fw-bold d-none d-sm-inline" style="color:var(--fb-primary);">SanGo</span>
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
             <span class="navbar-toggler-icon"></span>

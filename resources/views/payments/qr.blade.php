@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Thanh toán VNPay — FieldBook')
+@section('title', 'Thanh toán VNPay — SanGo')
 @section('content')
 
 <div class="container py-5" style="max-width:560px;">

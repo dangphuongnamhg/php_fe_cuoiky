@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Đặt sân theo giờ — FieldBook')
+@section('title', 'Đặt sân theo giờ — SanGo')
 @section('content')
 
 <div class="container py-4" style="max-width:1280px;">
@@ -11,6 +11,11 @@
                 <div class="p-4">
                     <span class="badge rounded-pill {{ $pitch->pitch_type === 'football' ? 'text-bg-primary' : 'text-bg-info' }} mb-2">{{ $pitch->pitch_type === 'football' ? 'Bóng đá' : 'Pickleball' }}</span>
                     <h1 class="fs-4 fw-bold">{{ $pitch->name }}</h1>
+                    @if($pitch->address)
+                    <div class="text-muted small mt-1 d-flex align-items-center gap-1">
+                        <i class="bi bi-geo-alt-fill text-danger"></i> {{ $pitch->address }}
+                    </div>
+                    @endif
                     <p class="text-muted small mt-2">{{ $pitch->description }}</p>
                     <div class="rounded-4 p-3 mt-3" style="background:#f0f4f8;">
                         <div class="text-muted" style="font-size:.7rem;">Giá cơ bản</div>
@@ -31,13 +36,11 @@
 
                 <div class="slot-grid mt-3" id="slot-grid"></div>
 
-                {{-- Legend --}}
                 <div class="d-flex flex-wrap gap-3 mt-3" style="font-size:.75rem;">
                     <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#e8f5e9;"></span> Giờ thường</span>
                     <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#fff3e0;"></span> Giờ vàng (x1.5)</span>
-                    <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#e3f2fd;"></span> Cuối tuần (x1.25)</span>
+                    <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#f3e8ff;"></span> Cuối tuần (x1.25)</span>
                     <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#ffebee;"></span> Đã đặt</span>
-                    <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:#f5f5f5;"></span> Giữ chỗ</span>
                     <span class="d-flex align-items-center gap-1"><span class="legend-dot" style="background:var(--fb-primary);"></span> Đang chọn</span>
                 </div>
 
@@ -89,20 +92,51 @@
         renderSlots(); updateSummary();
     }
 
-    const bookedSlots = ['18:00','18:30','19:00','19:30'];
-    const lockedSlots = ['06:00','06:30'];
+    const bookedData = @json($bookings ?? []);
+    const lockedData = @json($locks ?? []);
+
+    const bookedMap = {};
+    bookedData.forEach(b => {
+        if (!bookedMap[b.booking_date]) bookedMap[b.booking_date] = [];
+        // Convert start_time and end_time to 30-min slots
+        let current = new Date('1970-01-01T' + b.start_time);
+        let end = new Date('1970-01-01T' + b.end_time);
+        while(current < end) {
+            let h = String(current.getHours()).padStart(2, '0');
+            let m = String(current.getMinutes()).padStart(2, '0');
+            bookedMap[b.booking_date].push(`${h}:${m}`);
+            current.setMinutes(current.getMinutes() + 30);
+        }
+    });
+
+    const lockedMap = {};
+    lockedData.forEach(l => {
+        if (!lockedMap[l.lock_date]) lockedMap[l.lock_date] = [];
+        let current = new Date('1970-01-01T' + l.start_time);
+        let end = new Date('1970-01-01T' + l.end_time);
+        while(current < end) {
+            let h = String(current.getHours()).padStart(2, '0');
+            let m = String(current.getMinutes()).padStart(2, '0');
+            lockedMap[l.lock_date].push(`${h}:${m}`);
+            current.setMinutes(current.getMinutes() + 30);
+        }
+    });
 
     function getSlotClass(time, dayIdx) {
-        if (bookedSlots.includes(time) && dayIdx === 2) return 'slot-booked';
-        if (lockedSlots.includes(time) && dayIdx === 0) return 'slot-locked';
+        var d = days[dayIdx];
+        var dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+
+        if (bookedMap[dateStr] && bookedMap[dateStr].includes(time)) return 'booked';
+        if (lockedMap[dateStr] && lockedMap[dateStr].includes(time)) return 'slot-locked';
+        
         var parts = time.split(':').map(Number);
         var totalMins = parts[0] * 60 + parts[1];
         var dow = days[dayIdx].getDay();
         var isPremium = totalMins >= 1050 && totalMins < 1290; // 17:30–21:30
         var isWeekend = dow === 0 || dow === 6;
-        if (isPremium) return 'slot-premium';
-        if (isWeekend) return 'slot-weekend';
-        return 'slot-available';
+        if (isPremium) return 'premium';
+        if (isWeekend) return 'weekend';
+        return 'available';
     }
 
     function getMultiplier(time, dayIdx) {
@@ -125,7 +159,7 @@
                 cell.className = 'slot-cell ' + cls;
                 cell.textContent = time;
                 cell.dataset.time = time;
-                if (cls !== 'slot-booked' && cls !== 'slot-locked') {
+                if (cls !== 'booked' && cls !== 'slot-locked') {
                     (function(t) { cell.addEventListener('click', function() { handleSlotClick(t); }); })(time);
                 }
                 grid.appendChild(cell);
@@ -142,9 +176,11 @@
 
     function highlightRange() {
         document.querySelectorAll('.slot-cell').forEach(function(cell) {
-            cell.classList.remove('slot-selected');
-            if (startSlot && cell.dataset.time === startSlot) cell.classList.add('slot-selected');
-            if (startSlot && endSlot && cell.dataset.time >= startSlot && cell.dataset.time <= endSlot) cell.classList.add('slot-selected');
+            cell.classList.remove('selected', 'selected-start', 'selected-end');
+            var t = cell.dataset.time;
+            if (startSlot && t === startSlot) cell.classList.add('selected', 'selected-start');
+            if (endSlot && t === endSlot) cell.classList.add('selected', 'selected-end');
+            if (startSlot && endSlot && t > startSlot && t < endSlot) cell.classList.add('selected');
         });
     }
 
