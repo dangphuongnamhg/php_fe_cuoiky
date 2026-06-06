@@ -100,16 +100,16 @@
     const lockedSlots = ['06:00','06:30'];
 
     function getSlotClass(time, dayIdx) {
-        if (bookedSlots.includes(time) && dayIdx === 2) return 'slot-booked';
+        if (bookedSlots.includes(time) && dayIdx === 2) return 'booked';
         if (lockedSlots.includes(time) && dayIdx === 0) return 'slot-locked';
         var parts = time.split(':').map(Number);
         var totalMins = parts[0] * 60 + parts[1];
         var dow = days[dayIdx].getDay();
         var isPremium = totalMins >= 1050 && totalMins < 1290; // 17:30–21:30
         var isWeekend = dow === 0 || dow === 6;
-        if (isPremium) return 'slot-premium';
-        if (isWeekend) return 'slot-weekend';
-        return 'slot-available';
+        if (isPremium) return 'premium';
+        if (isWeekend) return 'weekend';
+        return 'available';
     }
 
     function getMultiplier(time, dayIdx) {
@@ -132,7 +132,7 @@
                 cell.className = 'slot-cell ' + cls;
                 cell.textContent = time;
                 cell.dataset.time = time;
-                if (cls !== 'slot-booked' && cls !== 'slot-locked') {
+                if (cls !== 'booked' && cls !== 'slot-locked') {
                     (function(t) { cell.addEventListener('click', function() { handleSlotClick(t); }); })(time);
                 }
                 grid.appendChild(cell);
@@ -149,9 +149,9 @@
 
     function highlightRange() {
         document.querySelectorAll('.slot-cell').forEach(function(cell) {
-            cell.classList.remove('slot-selected');
-            if (startSlot && cell.dataset.time === startSlot) cell.classList.add('slot-selected');
-            if (startSlot && endSlot && cell.dataset.time >= startSlot && cell.dataset.time <= endSlot) cell.classList.add('slot-selected');
+            cell.classList.remove('selected');
+            if (startSlot && cell.dataset.time === startSlot) cell.classList.add('selected');
+            if (startSlot && endSlot && cell.dataset.time >= startSlot && cell.dataset.time <= endSlot) cell.classList.add('selected');
         });
     }
 
