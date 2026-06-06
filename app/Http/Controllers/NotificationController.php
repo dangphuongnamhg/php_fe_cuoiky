@@ -28,4 +28,11 @@ class NotificationController extends Controller
         $this->api()->delete("/notifications/{$id}");
         return back();
     }
+
+    public function unreadCount()
+    {
+        return response()->json([
+            'count' => auth()->user()->unreadNotifications()->count()
+        ]);
+    }
 }

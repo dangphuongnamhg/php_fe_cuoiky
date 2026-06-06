@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'FieldBook — Đặt sân bóng đá & Pickleball')
+@section('title', 'SanGo — Đặt sân bóng đá & Pickleball')
 @section('content')
 
 {{-- HERO SECTION --}}
@@ -7,7 +7,7 @@
     <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1600&q=80');"></div>
     <div class="position-relative container py-5">
         <h1 class="display-4 fw-bold">Đặt sân bóng dễ dàng<br>Chơi ngay trong vài phút</h1>
-        <p class="lead mt-3 mx-auto" style="max-width:640px;opacity:.9;">FieldBook giúp bạn tìm và đặt sân bóng đá, pickleball nhanh chóng — thanh toán VNPay an toàn, xác nhận tức thì.</p>
+        <p class="lead mt-3 mx-auto" style="max-width:640px;opacity:.9;">SanGo giúp bạn tìm và đặt sân bóng đá, pickleball nhanh chóng — thanh toán VNPay an toàn, xác nhận tức thì.</p>
         <div class="mt-4 d-flex flex-wrap justify-content-center gap-3">
             <a href="#pitch-list" class="btn btn-light px-4 py-2 fw-semibold rounded-3" style="color:var(--fb-primary);">Xem danh sách sân</a>
             <a href="/?mode=monthly#pitch-list" class="btn btn-outline-light px-4 py-2 fw-semibold rounded-3">Đặt sân cố định tháng</a>

@@ -16,14 +16,14 @@ class TimeSlotController extends Controller
             ? Pitch::find($request->pitch_id)
             : $pitches->first();
 
-        $slots = $selectedPitch
+        $timeslots = $selectedPitch
             ? TimeSlot::where('pitch_id', $selectedPitch->id)
                 ->orderBy('day_of_week')
                 ->orderBy('start_time')
                 ->get()
             : collect();
 
-        return view('admin.timeslots.index', compact('pitches', 'selectedPitch', 'slots'));
+        return view('admin.timeslots.index', compact('pitches', 'selectedPitch', 'timeslots'));
     }
 
     public function toggle(Request $request)
